@@ -1,3 +1,23 @@
-<% if @user == current_user %>
-  <p><%= link_to "プロフィール編集", edit_user_path(@user.id) %></p>
-<% end %>
+<div><%= flash[:success] %></div>
+<%= render partial: 'books/list', locals: { user: @user, book: @book } %> 
+
+
+<h2>Books</h2>
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Title</th>
+      <th>Opinion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @books.each do |book| %>
+      <tr onclick="location.href='<%= user_path(@user.id) %>';">
+        <td><%= image_tag book.user.get_profile_image(100,100) %></td>
+        <td><%= link_to book.title, book_path %></td>
+        <td><%= book.body %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,4 +1,4 @@
-<div class="cintainer">
+<div class="container">
   <div class="row">
     <div class="col-sm-12 col-md-8 col-lg-5 px-5 px-sm-0">
       <h2>Log in</h2>
@@ -10,7 +10,7 @@
 
         <div class="field">
           <%= f.label :Password %><br />
-          <%= f.password_field :password, autocomplete: off %>
+          <%= f.password_field :password %>
         </div>
 
         <% if devise_mapping.rememberable? %>
