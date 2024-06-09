@@ -1,5 +1,10 @@
-<div><%= flash[:success] %></div>
-<%= render partial: 'books/list', locals: { user: @user, book: @book } %> 
+<% flash.each do |message_type, message| %>
+  <div class="flash-message <%= message_type %>"><%= message %></div>
+<% end %>
+
+<%= render partial:'books/list', locals: { user: @user, book: @book } %>
+
+
 
 
 <h2>Books</h2>
