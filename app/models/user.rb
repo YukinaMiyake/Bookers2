@@ -8,6 +8,16 @@ class User < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :book_comments, dependent: :destroy
   
+  #フォローしている関係性
+  has_many :active_relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+  #フォローされている関係性
+  has_many :passive_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+  
+  #フォローしているユーザーを取得（sourceはrelationship中間テーブルから取得するカラム）
+  has_many :followings, through: :active_relationships, source: :followed
+  #フォロワーを取得
+  has_many :followers, through: :passive_relationships, source: :follower
+  
   has_one_attached :profile_image
   
   validates :name, uniqueness: true, length: { minimum: 2, maximum: 20 }
@@ -19,6 +29,21 @@ class User < ApplicationRecord
       profile_image.attach(io: File.open(file_path), filename: 'default_image.jpg', content_type: 'image/jpeg')
     end
     profile_image.variant(resize_to_limit: [width, height]).processed
+  end
+  
+  #指定したユーザーをフォローする
+  def follow(user)
+    active_relationships.create(followed_id: user.id)
+  end
+  
+  #指定したユーザーのフォローを解除する
+  def unfollow(user)
+    active_relationships.find_by(follow_id: user.id).destroy
+  end
+  
+  #指定したユーザーをフォローしているか
+  def following?(user)
+    followings.include?(user)
   end
   
   GUEST_USER_EMAIL = "guest@example.com"
